@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-Widget soundButton({
+Widget circularButton({
   required VoidCallback onTap,
   required IconData icon,
   required Offset shadowOffset,
+  String label = '',
   Color color = const Color.fromRGBO(100, 181, 246, 1),
   double height = 100,
   double width = 100,
@@ -27,7 +28,10 @@ Widget soundButton({
           ),
         ],
       ),
-      child: Icon(icon),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [Icon(icon), if (label != '') Text(label)],
+      ),
     ),
   );
 }

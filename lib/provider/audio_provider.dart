@@ -29,6 +29,8 @@ class AudioProvider extends ChangeNotifier {
       loopingStartAt: const Duration(seconds: 1),
     );
 
+    _soloud.set3dSourceMinMaxDistance(handle!, 1, 20);
+
     isPlaying = true;
     notifyListeners();
   }
@@ -51,7 +53,7 @@ class AudioProvider extends ChangeNotifier {
   }
 
   Future<void> disposeAudio() async {
-    stopSound();
+    await stopSound();
     if (soundSource != null) {
       await _soloud.disposeSource(soundSource!);
     }

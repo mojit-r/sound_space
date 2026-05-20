@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sound_space/provider/audio_provider.dart';
-import 'package:sound_space/widgets/sound_button.dart';
+import 'package:sound_space/widgets/circular_button.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -34,12 +34,13 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          soundButton(
+          circularButton(
             onTap: () {
               audio.directSound(0.0, 5.0, 0.0);
               debugPrint('⬆️ sound playing from the top');
             },
             icon: Icons.keyboard_arrow_up_rounded,
+            label: 'Top',
             shadowOffset: const Offset(0, 4),
           ),
 
@@ -48,23 +49,25 @@ class _HomeScreenState extends State<HomeScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              soundButton(
+              circularButton(
                 onTap: () {
                   audio.directSound(-5.0, 0.0, 0.0);
                   debugPrint('⬅️ sound playing from the left');
                 },
                 icon: Icons.keyboard_arrow_left_rounded,
+                label: 'Left',
                 shadowOffset: const Offset(4, 0),
               ),
 
               Row(
                 children: [
-                  soundButton(
+                  circularButton(
                     onTap: () {
                       audio.directSound(0.0, 0.0, -5.0);
                       debugPrint('✋ sound playing from front');
                     },
                     icon: Icons.front_hand_rounded,
+                    label: 'front',
                     shadowOffset: const Offset(0, 0),
                     color: Colors.orange,
                     height: 50,
@@ -74,12 +77,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   const SizedBox(width: 10),
 
-                  soundButton(
+                  circularButton(
                     onTap: () {
                       audio.directSound(0.0, 0.0, 5.0);
                       debugPrint('🤚 sound playing from back');
                     },
                     icon: Icons.back_hand_rounded,
+                    label: 'back',
                     shadowOffset: const Offset(0, 0),
                     color: Colors.orange,
                     height: 50,
@@ -89,12 +93,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
 
-              soundButton(
+              circularButton(
                 onTap: () {
                   audio.directSound(5.0, 0.0, 0.0);
                   debugPrint('➡️ sound playing from right');
                 },
                 icon: Icons.keyboard_arrow_right_rounded,
+                label: 'Right',
                 shadowOffset: const Offset(-4, 0),
               ),
             ],
@@ -102,12 +107,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
           const SizedBox(height: 60),
 
-          soundButton(
+          circularButton(
             onTap: () {
               audio.directSound(0.0, -5.0, 0.0);
               debugPrint('⬇️ sound playing from bottom');
             },
             icon: Icons.keyboard_arrow_down_rounded,
+            label: 'Bottom',
             shadowOffset: const Offset(0, -4),
           ),
         ],
