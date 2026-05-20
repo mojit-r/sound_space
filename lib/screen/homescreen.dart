@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sound_space/provider/audio_provider.dart';
 import 'package:sound_space/widgets/circular_button.dart';
+import 'package:sound_space/widgets/rectangular_button.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -32,89 +33,37 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.blue.shade300,
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          circularButton(
-            onTap: () {
-              audio.directSound(0.0, 5.0, 0.0);
-              debugPrint('⬆️ sound playing from the top');
-            },
-            icon: Icons.keyboard_arrow_up_rounded,
-            label: 'Top',
-            shadowOffset: const Offset(0, 4),
-          ),
-
-          const SizedBox(height: 60),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          _upperSection(audio),
+          Column(
             children: [
-              circularButton(
-                onTap: () {
-                  audio.directSound(-5.0, 0.0, 0.0);
-                  debugPrint('⬅️ sound playing from the left');
-                },
-                icon: Icons.keyboard_arrow_left_rounded,
-                label: 'Left',
-                shadowOffset: const Offset(4, 0),
-              ),
-
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  circularButton(
-                    onTap: () {
-                      audio.directSound(0.0, 0.0, -5.0);
-                      debugPrint('✋ sound playing from front');
-                    },
-                    icon: Icons.front_hand_rounded,
-                    label: 'front',
-                    shadowOffset: const Offset(0, 0),
-                    color: Colors.orange,
-                    height: 50,
-                    width: 50,
-                    shadowSpreadRadius: 2,
+                  RectangularButton(
+                    onTap: () {},
+                    label: 'Doppler Effect',
+                    icon: Icons.speed_rounded,
+                    color: Colors.green.shade300,
                   ),
-
-                  const SizedBox(width: 10),
-
-                  circularButton(
-                    onTap: () {
-                      audio.directSound(0.0, 0.0, 5.0);
-                      debugPrint('🤚 sound playing from back');
-                    },
-                    icon: Icons.back_hand_rounded,
-                    label: 'back',
-                    shadowOffset: const Offset(0, 0),
-                    color: Colors.orange,
-                    height: 50,
-                    width: 50,
-                    shadowSpreadRadius: 2,
+                  RectangularButton(
+                    onTap: () {},
+                    label: 'Spatial calc.',
+                    icon: Icons.social_distance_rounded,
+                    color: Colors.pink.shade300,
                   ),
                 ],
               ),
 
-              circularButton(
-                onTap: () {
-                  audio.directSound(5.0, 0.0, 0.0);
-                  debugPrint('➡️ sound playing from right');
-                },
-                icon: Icons.keyboard_arrow_right_rounded,
-                label: 'Right',
-                shadowOffset: const Offset(-4, 0),
+              const SizedBox(height: 10),
+              RectangularButton(
+                onTap: () {},
+                label: 'Attenuation',
+                icon: Icons.person,
+                color: Colors.indigo.shade300,
               ),
             ],
-          ),
-
-          const SizedBox(height: 60),
-
-          circularButton(
-            onTap: () {
-              audio.directSound(0.0, -5.0, 0.0);
-              debugPrint('⬇️ sound playing from bottom');
-            },
-            icon: Icons.keyboard_arrow_down_rounded,
-            label: 'Bottom',
-            shadowOffset: const Offset(0, -4),
           ),
         ],
       ),
@@ -130,6 +79,96 @@ class _HomeScreenState extends State<HomeScreen> {
             ? const Icon(Icons.stop)
             : const Icon(Icons.play_arrow),
       ),
+    );
+  }
+
+  Column _upperSection(AudioProvider audio) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CircularButton(
+          onTap: () {
+            audio.directSound(0.0, 5.0, 0.0);
+            debugPrint('⬆️ sound playing from the top');
+          },
+          icon: Icons.keyboard_arrow_up_rounded,
+          label: 'Top',
+          shadowOffset: const Offset(0, 4),
+        ),
+
+        const SizedBox(height: 60),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            CircularButton(
+              onTap: () {
+                audio.directSound(-5.0, 0.0, 0.0);
+                debugPrint('⬅️ sound playing from the left');
+              },
+              icon: Icons.keyboard_arrow_left_rounded,
+              label: 'Left',
+              shadowOffset: const Offset(4, 0),
+            ),
+
+            Row(
+              children: [
+                CircularButton(
+                  onTap: () {
+                    audio.directSound(0.0, 0.0, -5.0);
+                    debugPrint('✋ sound playing from front');
+                  },
+                  icon: Icons.front_hand_rounded,
+                  label: 'front',
+                  shadowOffset: const Offset(0, 0),
+                  color: Colors.orange,
+                  height: 50,
+                  width: 50,
+                  shadowSpreadRadius: 2,
+                ),
+
+                const SizedBox(width: 10),
+
+                CircularButton(
+                  onTap: () {
+                    audio.directSound(0.0, 0.0, 5.0);
+                    debugPrint('🤚 sound playing from back');
+                  },
+                  icon: Icons.back_hand_rounded,
+                  label: 'back',
+                  shadowOffset: const Offset(0, 0),
+                  color: Colors.orange,
+                  height: 50,
+                  width: 50,
+                  shadowSpreadRadius: 2,
+                ),
+              ],
+            ),
+
+            CircularButton(
+              onTap: () {
+                audio.directSound(5.0, 0.0, 0.0);
+                debugPrint('➡️ sound playing from right');
+              },
+              icon: Icons.keyboard_arrow_right_rounded,
+              label: 'Right',
+              shadowOffset: const Offset(-4, 0),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 60),
+
+        CircularButton(
+          onTap: () {
+            audio.directSound(0.0, -5.0, 0.0);
+            debugPrint('⬇️ sound playing from bottom');
+          },
+          icon: Icons.keyboard_arrow_down_rounded,
+          label: 'Bottom',
+          shadowOffset: const Offset(0, -4),
+        ),
+      ],
     );
   }
 }
