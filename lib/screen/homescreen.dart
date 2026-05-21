@@ -38,6 +38,41 @@ class _HomeScreenState extends State<HomeScreen> {
           _upperSection(audio),
           Column(
             children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                child: Container(
+                  height: 90,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.blueGrey.shade300,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Attenuation(Distance / Volume Fading)',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Slider(
+                        value: audio.attenuationDistance,
+                        min: 0.0,
+                        max: 5.0,
+                        divisions: 50,
+                        label: audio.attenuationDistance.round().toString(),
+                        onChanged: (double newValue) {
+                          audio.setAttenuationDistance(newValue);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -54,14 +89,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Colors.pink.shade300,
                   ),
                 ],
-              ),
-
-              const SizedBox(height: 10),
-              RectangularButton(
-                onTap: () {},
-                label: 'Attenuation',
-                icon: Icons.person,
-                color: Colors.indigo.shade300,
               ),
             ],
           ),
@@ -88,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         CircularButton(
           onTap: () {
-            audio.directSound(0.0, 5.0, 0.0);
+            audio.directSound(0.0, audio.attenuationDistance, 0.0);
             debugPrint('⬆️ sound playing from the top');
           },
           icon: Icons.keyboard_arrow_up_rounded,
@@ -103,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             CircularButton(
               onTap: () {
-                audio.directSound(-5.0, 0.0, 0.0);
+                audio.directSound(-audio.attenuationDistance, 0.0, 0.0);
                 debugPrint('⬅️ sound playing from the left');
               },
               icon: Icons.keyboard_arrow_left_rounded,
@@ -115,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 CircularButton(
                   onTap: () {
-                    audio.directSound(0.0, 0.0, -5.0);
+                    audio.directSound(0.0, 0.0, -audio.attenuationDistance);
                     debugPrint('✋ sound playing from front');
                   },
                   icon: Icons.front_hand_rounded,
@@ -131,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 CircularButton(
                   onTap: () {
-                    audio.directSound(0.0, 0.0, 5.0);
+                    audio.directSound(0.0, 0.0, audio.attenuationDistance);
                     debugPrint('🤚 sound playing from back');
                   },
                   icon: Icons.back_hand_rounded,
@@ -147,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             CircularButton(
               onTap: () {
-                audio.directSound(5.0, 0.0, 0.0);
+                audio.directSound(audio.attenuationDistance, 0.0, 0.0);
                 debugPrint('➡️ sound playing from right');
               },
               icon: Icons.keyboard_arrow_right_rounded,
@@ -161,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
         CircularButton(
           onTap: () {
-            audio.directSound(0.0, -5.0, 0.0);
+            audio.directSound(0.0, -audio.attenuationDistance, 0.0);
             debugPrint('⬇️ sound playing from bottom');
           },
           icon: Icons.keyboard_arrow_down_rounded,

@@ -25,7 +25,6 @@ class RectangularButton extends StatelessWidget {
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(12),
           color: color,
-          boxShadow: [BoxShadow(color: color.withValues(alpha: 0.5))],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
