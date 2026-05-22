@@ -115,11 +115,9 @@ class AudioProvider extends ChangeNotifier {
 
   void toggleDoppler() {
     dopplerEnabled = !dopplerEnabled;
-
     if (handle != null) {
       _soloud.set3dSourceDopplerFactor(handle!, dopplerEnabled ? 1.0 : 0.0);
     }
-
     notifyListeners();
   }
 
