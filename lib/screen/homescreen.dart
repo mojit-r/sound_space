@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sound_space/provider/audio_provider.dart';
 import 'package:sound_space/widgets/circular_button.dart';
+import 'package:sound_space/widgets/custom_snackbar.dart';
 import 'package:sound_space/widgets/rectangular_button.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -100,11 +101,13 @@ class _HomeScreenState extends State<HomeScreen> {
               isEnabled: audio.dopplerEnabled,
             ),
             RectangularButton(
-              onTap: () {},
-              label: 'Spatial calc.',
-              icon: Icons.social_distance_rounded,
+              onTap: () {
+                audio.toggleOrbit();
+              },
+              label: '360° Sound',
+              icon: Icons.spatial_audio,
               color: Colors.pink.shade300,
-              isEnabled: false,
+              isEnabled: audio.orbitEnabled,
             ),
           ],
         ),
@@ -126,6 +129,9 @@ class _HomeScreenState extends State<HomeScreen> {
             );
             if (!success && audio.attenuationDistance == 0) {
               _showAttenuationWarning(audio);
+            }
+            if (audio.orbitEnabled) {
+              _show360Warning(audio);
             }
             debugPrint('⬆️ sound playing from the top');
           },
@@ -151,6 +157,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (!success && audio.attenuationDistance == 0) {
                   _showAttenuationWarning(audio);
                 }
+                if (audio.orbitEnabled) {
+                  _show360Warning(audio);
+                }
                 debugPrint('⬅️ sound playing from the left');
               },
               icon: Icons.keyboard_arrow_left_rounded,
@@ -171,6 +180,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                     if (!success && audio.attenuationDistance == 0) {
                       _showAttenuationWarning(audio);
+                    }
+                    if (audio.orbitEnabled) {
+                      _show360Warning(audio);
                     }
                     debugPrint('✋ sound playing from front');
                   },
@@ -197,6 +209,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     if (!success && audio.attenuationDistance == 0) {
                       _showAttenuationWarning(audio);
                     }
+                    if (audio.orbitEnabled) {
+                      _show360Warning(audio);
+                    }
                     debugPrint('🤚 sound playing from back');
                   },
                   icon: Icons.back_hand_rounded,
@@ -222,6 +237,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (!success && audio.attenuationDistance == 0) {
                   _showAttenuationWarning(audio);
                 }
+                if (audio.orbitEnabled) {
+                  _show360Warning(audio);
+                }
                 debugPrint('➡️ sound playing from right');
               },
               icon: Icons.keyboard_arrow_right_rounded,
@@ -245,6 +263,9 @@ class _HomeScreenState extends State<HomeScreen> {
             if (!success && audio.attenuationDistance == 0) {
               _showAttenuationWarning(audio);
             }
+            if (audio.orbitEnabled) {
+              _show360Warning(audio);
+            }
             debugPrint('⬇️ sound playing from bottom');
           },
           icon: Icons.keyboard_arrow_down_rounded,
@@ -259,24 +280,14 @@ class _HomeScreenState extends State<HomeScreen> {
   void _showAttenuationWarning(AudioProvider audio) {
     if (!audio.isPlaying) return;
 
-    ScaffoldMessenger.of(
-      context,
-    ).clearSnackBars(); // Clear active snackbars immediately
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text(
-          'Attenuation should not be zero',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
-        ),
-        duration: const Duration(seconds: 2),
-        backgroundColor: Colors.blue.shade300.withValues(alpha: 0.7),
-        behavior: SnackBarBehavior.floating,
-        margin: EdgeInsets.only(
-          bottom: MediaQuery.of(context).size.height - 220,
-          left: 10,
-          right: 10,
-        ),
-      ),
-    );
+    ScaffoldMessenger.of(context).clearSnackBars();
+    CustomSnackbar.show(context, 'Attenuation should not be zero');
+  }
+
+  void _show360Warning(AudioProvider audio) {
+    if (!audio.isPlaying) return;
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+    CustomSnackbar.show(context, '360° Sound is Playing');
   }
 }
