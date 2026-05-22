@@ -91,16 +91,20 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             RectangularButton(
-              onTap: () {},
+              onTap: () {
+                audio.toggleDoppler();
+              },
               label: 'Doppler Effect',
               icon: Icons.speed_rounded,
               color: Colors.indigo.shade300,
+              isEnabled: audio.dopplerEnabled,
             ),
             RectangularButton(
               onTap: () {},
               label: 'Spatial calc.',
               icon: Icons.social_distance_rounded,
               color: Colors.pink.shade300,
+              isEnabled: false,
             ),
           ],
         ),
@@ -115,6 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
         CircularButton(
           onTap: () async {
             final success = await audio.directSound(
+              'top',
               0.0,
               audio.attenuationDistance,
               0.0,
@@ -127,6 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
           icon: Icons.keyboard_arrow_up_rounded,
           label: 'Top',
           shadowOffset: const Offset(0, 4),
+          isEnabled: audio.activeSide == 'top',
         ),
 
         const SizedBox(height: 60),
@@ -137,6 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
             CircularButton(
               onTap: () async {
                 final success = await audio.directSound(
+                  'left',
                   -audio.attenuationDistance,
                   0.0,
                   0.0,
@@ -149,6 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: Icons.keyboard_arrow_left_rounded,
               label: 'Left',
               shadowOffset: const Offset(4, 0),
+              isEnabled: audio.activeSide == 'left',
             ),
 
             Row(
@@ -156,6 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 CircularButton(
                   onTap: () async {
                     final success = await audio.directSound(
+                      'front',
                       0.0,
                       0.0,
                       -audio.attenuationDistance,
@@ -168,6 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: Icons.front_hand_rounded,
                   label: 'front',
                   shadowOffset: const Offset(0, 0),
+                  isEnabled: audio.activeSide == 'front',
                   color: Colors.orange,
                   height: 50,
                   width: 50,
@@ -179,6 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 CircularButton(
                   onTap: () async {
                     final success = await audio.directSound(
+                      'back',
                       0.0,
                       0.0,
                       audio.attenuationDistance,
@@ -191,6 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: Icons.back_hand_rounded,
                   label: 'back',
                   shadowOffset: const Offset(0, 0),
+                  isEnabled: audio.activeSide == 'back',
                   color: Colors.orange,
                   height: 50,
                   width: 50,
@@ -202,6 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
             CircularButton(
               onTap: () async {
                 final success = await audio.directSound(
+                  'right',
                   audio.attenuationDistance,
                   0.0,
                   0.0,
@@ -214,6 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: Icons.keyboard_arrow_right_rounded,
               label: 'Right',
               shadowOffset: const Offset(-4, 0),
+              isEnabled: audio.activeSide == 'right',
             ),
           ],
         ),
@@ -223,6 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
         CircularButton(
           onTap: () async {
             final success = await audio.directSound(
+              'bottom',
               0.0,
               -audio.attenuationDistance,
               0.0,
@@ -235,6 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
           icon: Icons.keyboard_arrow_down_rounded,
           label: 'Bottom',
           shadowOffset: const Offset(0, -4),
+          isEnabled: audio.activeSide == 'bottom',
         ),
       ],
     );
@@ -250,11 +266,16 @@ class _HomeScreenState extends State<HomeScreen> {
       SnackBar(
         content: const Text(
           'Attenuation should not be zero',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
         ),
         duration: const Duration(seconds: 2),
-        backgroundColor: Colors.blue.shade300,
+        backgroundColor: Colors.blue.shade300.withValues(alpha: 0.7),
         behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.only(
+          bottom: MediaQuery.of(context).size.height - 220,
+          left: 10,
+          right: 10,
+        ),
       ),
     );
   }

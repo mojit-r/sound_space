@@ -4,6 +4,7 @@ class CircularButton extends StatelessWidget {
   final VoidCallback onTap;
   final IconData icon;
   final Offset shadowOffset;
+  final bool isEnabled;
   final String label;
   final Color color;
   final double height;
@@ -15,6 +16,7 @@ class CircularButton extends StatelessWidget {
     required this.onTap,
     required this.icon,
     required this.shadowOffset,
+    required this.isEnabled,
     this.label = '',
     this.color = const Color.fromRGBO(100, 181, 246, 1),
     this.height = 100,
@@ -32,7 +34,7 @@ class CircularButton extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: color.withValues(alpha: 0.5),
-          boxShadow: [
+          boxShadow: isEnabled ? [
             BoxShadow(
               color: color.withValues(alpha: 0.5),
               offset: shadowOffset,
@@ -40,7 +42,7 @@ class CircularButton extends StatelessWidget {
               blurStyle: BlurStyle.outer,
               spreadRadius: shadowSpreadRadius,
             ),
-          ],
+          ] : [],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

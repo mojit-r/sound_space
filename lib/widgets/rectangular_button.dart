@@ -5,6 +5,7 @@ class RectangularButton extends StatelessWidget {
   final String label;
   final IconData icon;
   final Color color;
+  final bool isEnabled;
 
   const RectangularButton({
     super.key,
@@ -12,6 +13,7 @@ class RectangularButton extends StatelessWidget {
     required this.label,
     required this.icon,
     required this.color,
+    required this.isEnabled,
   });
 
   @override
@@ -30,7 +32,33 @@ class RectangularButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(icon, size: 28),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, size: 28),
+                const SizedBox(height: 8),
+                Icon(
+                  Icons.circle,
+                  size: 12,
+                  color: isEnabled
+                      ? Colors.green.shade300
+                      : Colors.grey.shade300,
+                  shadows: const [
+                    Shadow(
+                      blurRadius: 2.0,
+                      color: Colors.black,
+                      offset: Offset.zero,
+                    ),
+
+                    Shadow(
+                      blurRadius: 2.0,
+                      color: Colors.black,
+                      offset: Offset.zero,
+                    ),
+                  ],
+                ),
+              ],
+            ),
             const SizedBox(width: 10),
             const VerticalDivider(color: Colors.black, indent: 8, endIndent: 8),
             const SizedBox(width: 10),

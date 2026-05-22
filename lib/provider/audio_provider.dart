@@ -8,10 +8,18 @@ class AudioProvider extends ChangeNotifier {
   SoundHandle? handle;
 
   bool isPlaying = false;
+  String activeSide = '';
+
   double posX = 0;
   double posY = 0;
   double posZ = -1;
   double attenuationDistance = 1;
+
+  double velX = 0;
+  double velY = 0;
+  double velZ = 0;
+
+  bool dopplerEnabled = false;
 
   Future<void> initializeAudio() async {
     await _soloud.init();
@@ -47,22 +55,32 @@ class AudioProvider extends ChangeNotifier {
 
     handle = null;
     isPlaying = false;
+    activeSide = '';
     debugPrint('🛑 Sound Stopped');
     notifyListeners();
   }
 
-  Future<bool> directSound(double x, double y, double z) async {
+  Future<bool> directSound(String side, double x, double y, double z) async {
     if (handle == null) return false;
-    if(!isPlaying) return false;
+    if (!isPlaying) return false;
     if (attenuationDistance == 0) return false;
+
+    if (dopplerEnabled) {
+      final velX = x - posX;
+      final velY = y - posY;
+      final velZ = z - posZ;
+
+      _soloud.set3dSourceVelocity(handle!, velX, velY, velZ);
+    }
 
     posX = x;
     posY = y;
     posZ = z;
-
     _soloud.setVolume(handle!, 0.8);
     _soloud.set3dSourcePosition(handle!, posX, posY, posZ);
 
+    activeSide = side;
+    notifyListeners();
     return true;
   }
 
@@ -76,6 +94,16 @@ class AudioProvider extends ChangeNotifier {
         posY == 0 ? 0 : posY.sign * attenuationDistance,
         posZ == 0 ? 0 : posZ.sign * attenuationDistance,
       );
+    }
+
+    notifyListeners();
+  }
+
+  void toggleDoppler() {
+    dopplerEnabled = !dopplerEnabled;
+
+    if (handle != null) {
+      _soloud.set3dSourceDopplerFactor(handle!, dopplerEnabled ? 1.0 : 0.0);
     }
 
     notifyListeners();
