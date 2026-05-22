@@ -32,67 +32,10 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
         backgroundColor: Colors.blue.shade300,
       ),
+
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _upperSection(audio),
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                child: Container(
-                  height: 90,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.blueGrey.shade300,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Attenuation(Distance / Volume Fading)',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Slider(
-                        value: audio.attenuationDistance,
-                        min: 0.0,
-                        max: 5.0,
-                        divisions: 50,
-                        label: audio.attenuationDistance.round().toString(),
-                        onChanged: (double newValue) {
-                          audio.setAttenuationDistance(newValue);
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  RectangularButton(
-                    onTap: () {},
-                    label: 'Doppler Effect',
-                    icon: Icons.speed_rounded,
-                    color: Colors.green.shade300,
-                  ),
-                  RectangularButton(
-                    onTap: () {},
-                    label: 'Spatial calc.',
-                    icon: Icons.social_distance_rounded,
-                    color: Colors.pink.shade300,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
+        children: [_upperSection(audio), _lowerSection(audio)],
       ),
 
       floatingActionButton: FloatingActionButton(
@@ -109,13 +52,76 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Column _lowerSection(AudioProvider audio) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18.0),
+          child: Container(
+            height: 90,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.green.shade300,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text(
+                  'Attenuation(Distance / Volume Fading)',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+                Slider(
+                  value: audio.attenuationDistance,
+                  min: 0.0,
+                  max: 5.0,
+                  divisions: 50,
+                  label: audio.attenuationDistance.round().toString(),
+                  onChanged: (double newValue) {
+                    audio.setAttenuationDistance(newValue);
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            RectangularButton(
+              onTap: () {},
+              label: 'Doppler Effect',
+              icon: Icons.speed_rounded,
+              color: Colors.indigo.shade300,
+            ),
+            RectangularButton(
+              onTap: () {},
+              label: 'Spatial calc.',
+              icon: Icons.social_distance_rounded,
+              color: Colors.pink.shade300,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   Column _upperSection(AudioProvider audio) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         CircularButton(
-          onTap: () {
-            audio.directSound(0.0, audio.attenuationDistance, 0.0);
+          onTap: () async {
+            final success = await audio.directSound(
+              0.0,
+              audio.attenuationDistance,
+              0.0,
+            );
+            if (!success && audio.attenuationDistance == 0) {
+              _showAttenuationWarning(audio);
+            }
             debugPrint('⬆️ sound playing from the top');
           },
           icon: Icons.keyboard_arrow_up_rounded,
@@ -129,8 +135,15 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             CircularButton(
-              onTap: () {
-                audio.directSound(-audio.attenuationDistance, 0.0, 0.0);
+              onTap: () async {
+                final success = await audio.directSound(
+                  -audio.attenuationDistance,
+                  0.0,
+                  0.0,
+                );
+                if (!success && audio.attenuationDistance == 0) {
+                  _showAttenuationWarning(audio);
+                }
                 debugPrint('⬅️ sound playing from the left');
               },
               icon: Icons.keyboard_arrow_left_rounded,
@@ -141,8 +154,15 @@ class _HomeScreenState extends State<HomeScreen> {
             Row(
               children: [
                 CircularButton(
-                  onTap: () {
-                    audio.directSound(0.0, 0.0, -audio.attenuationDistance);
+                  onTap: () async {
+                    final success = await audio.directSound(
+                      0.0,
+                      0.0,
+                      -audio.attenuationDistance,
+                    );
+                    if (!success && audio.attenuationDistance == 0) {
+                      _showAttenuationWarning(audio);
+                    }
                     debugPrint('✋ sound playing from front');
                   },
                   icon: Icons.front_hand_rounded,
@@ -157,8 +177,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(width: 10),
 
                 CircularButton(
-                  onTap: () {
-                    audio.directSound(0.0, 0.0, audio.attenuationDistance);
+                  onTap: () async {
+                    final success = await audio.directSound(
+                      0.0,
+                      0.0,
+                      audio.attenuationDistance,
+                    );
+                    if (!success && audio.attenuationDistance == 0) {
+                      _showAttenuationWarning(audio);
+                    }
                     debugPrint('🤚 sound playing from back');
                   },
                   icon: Icons.back_hand_rounded,
@@ -173,8 +200,15 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             CircularButton(
-              onTap: () {
-                audio.directSound(audio.attenuationDistance, 0.0, 0.0);
+              onTap: () async {
+                final success = await audio.directSound(
+                  audio.attenuationDistance,
+                  0.0,
+                  0.0,
+                );
+                if (!success && audio.attenuationDistance == 0) {
+                  _showAttenuationWarning(audio);
+                }
                 debugPrint('➡️ sound playing from right');
               },
               icon: Icons.keyboard_arrow_right_rounded,
@@ -187,8 +221,15 @@ class _HomeScreenState extends State<HomeScreen> {
         const SizedBox(height: 60),
 
         CircularButton(
-          onTap: () {
-            audio.directSound(0.0, -audio.attenuationDistance, 0.0);
+          onTap: () async {
+            final success = await audio.directSound(
+              0.0,
+              -audio.attenuationDistance,
+              0.0,
+            );
+            if (!success && audio.attenuationDistance == 0) {
+              _showAttenuationWarning(audio);
+            }
             debugPrint('⬇️ sound playing from bottom');
           },
           icon: Icons.keyboard_arrow_down_rounded,
@@ -196,6 +237,25 @@ class _HomeScreenState extends State<HomeScreen> {
           shadowOffset: const Offset(0, -4),
         ),
       ],
+    );
+  }
+
+  void _showAttenuationWarning(AudioProvider audio) {
+    if (!audio.isPlaying) return;
+
+    ScaffoldMessenger.of(
+      context,
+    ).clearSnackBars(); // Clear active snackbars immediately
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text(
+          'Attenuation should not be zero',
+          style: TextStyle(color: Colors.black),
+        ),
+        duration: const Duration(seconds: 2),
+        backgroundColor: Colors.blue.shade300,
+        behavior: SnackBarBehavior.floating,
+      ),
     );
   }
 }

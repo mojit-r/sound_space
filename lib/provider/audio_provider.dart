@@ -15,7 +15,7 @@ class AudioProvider extends ChangeNotifier {
 
   Future<void> initializeAudio() async {
     await _soloud.init();
-    soundSource = await _soloud.loadAsset('assets/sound/konoha_peace.mp3');
+    soundSource = await _soloud.loadAsset('assets/sound/naruto_afternoon.mp3');
   }
 
   Future<void> playSound() async {
@@ -51,8 +51,10 @@ class AudioProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> directSound(double x, double y, double z) async {
-    if (handle == null) return;
+  Future<bool> directSound(double x, double y, double z) async {
+    if (handle == null) return false;
+    if(!isPlaying) return false;
+    if (attenuationDistance == 0) return false;
 
     posX = x;
     posY = y;
@@ -60,6 +62,8 @@ class AudioProvider extends ChangeNotifier {
 
     _soloud.setVolume(handle!, 0.8);
     _soloud.set3dSourcePosition(handle!, posX, posY, posZ);
+
+    return true;
   }
 
   void setAttenuationDistance(double value) {
