@@ -21,6 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Size mq = MediaQuery.of(context).size;
     final audio = context.watch<AudioProvider>();
 
     return Scaffold(
@@ -35,8 +36,13 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [_upperSection(audio), _lowerSection(audio)],
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+           SizedBox(height: mq.height * 0.05),
+          _upperSection(audio),
+          SizedBox(height: mq.height * 0.07),
+          _lowerSection(audio),
+        ],
       ),
 
       floatingActionButton: FloatingActionButton(
