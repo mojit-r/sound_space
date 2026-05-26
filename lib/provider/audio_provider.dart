@@ -29,7 +29,7 @@ class AudioProvider extends ChangeNotifier {
   // Initialize Audio
   Future<void> initializeAudio() async {
     await _soloud.init();
-    soundSource = await _soloud.loadAsset('assets/sound/naruto_afternoon.mp3');
+    soundSource = await _soloud.loadAsset('assets/sound/helicopter.mp3');
   }
 
   Future<void> playSound() async {
@@ -132,7 +132,7 @@ class AudioProvider extends ChangeNotifier {
     activeSide = '';
 
     orbitTimer = Timer.periodic(const Duration(milliseconds: 40), (_) {
-      orbitAngle += 0.08;
+      orbitAngle += 0.04;
 
       final x = cos(orbitAngle) * attenuationDistance;
       final z = sin(orbitAngle) * attenuationDistance;
